@@ -1,0 +1,4 @@
+[2021-01-26 16:10:43,249] - urllib3.connectionpool - DEBUG - Starting new HTTP connection (1): localhost:105
+[2021-01-26 16:10:45,289] - urllib3.connectionpool - DEBUG - http://localhost:105 "HEAD /car HTTP/1.1" 405 0
+[2021-01-26 16:10:45,318] - root - INFO - Opening concurrency threadpool...
+[2021-01-26 16:10:45,345] - root - INFO - Opened threadpool with max_workers of 25

@@ -1,0 +1,11 @@
+import smtplib
+
+host = "server.smtp.com"
+server = smtplib.SMTP(host)
+FROM = "testpython@test.com"
+TO = "bla@test.com"
+MSG = "Subject: Test email python\n\nBody of your message!"
+server.sendmail(FROM, TO, MSG)
+
+server.quit()
+print ("Email Send")
