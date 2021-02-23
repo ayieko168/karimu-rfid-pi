@@ -6,20 +6,24 @@ import datetime
 import logging
 import smtplib
 from email.message import EmailMessage
+import os, sys
 
-EMAIL_UPDATE_FREQUENCY = 43200  # How frequent to send email updates - intager in seconds - 43200(12Hrs)
+print()
+
+EMAIL_UPDATE_FREQUENCY = 120  # How frequent to send email updates - intager in seconds - 43200(12Hrs)
 start_time = time.time()
 
 #log_file = r"C:\Users\PERCY\Desktop\RFID_PI_LOGS.log"
-log_file = r"C:\Users\PERCY\projects\api\RFID_PI_LOGS.log"
+log_file = f"C:/Users/{os.getlogin()}/Desktop/RFID_PI_LOGS.log"
+print(f"Saving logs to :: {log_file}")
 
 logging.basicConfig(filename=log_file, 
-                    filemode='w', 
+                    filemode='a', 
                     format='[%(asctime)s] - %(name)s - %(levelname)s - %(message)s', 
                     level=logging.DEBUG)
 
 print("RFID Reader started...")
-#url = "http://192.168.8.189:6400/api/events/ontagread"
+#url = "http://192.168.137.66:6400/api/events/rfid/read"
 url = "http://localhost:105/car"
 
 def send_tag_data(tag_id):  
@@ -38,14 +42,15 @@ def test_endpoint_connection(url=url, timeout=3):
 def send_report():
     
     msg = EmailMessage()
-    msg['Subject'] = f"CRM SOFTWARE FEEDBACK: {str(subject).upper()}"
-    msg['From'] = SETTINGS_DICT['User']['email']
+    msg['Subject'] = "RFID PI EMAIL UPDATE"
+    msg['From'] = "rfidpike@gmail.com"
     msg['To'] = 'antonyalen1960@gmail.com'
     
     with open(log_file, 'rb') as f:
         file_data = f.read()
         file_name = f.name
-
+    
+    msg.set_content(f"[SENDER DETAILS]\nUser Name: {os.getlogin()}\nPython Executable: {sys.executable}\n\n\n[See Attached Log File.]")
     msg.add_attachment(file_data, maintype='application', subtype='octet-stream', filename=file_name)
     
     with smtplib.SMTP_SSL('smtp.gmail.com', 465) as smtp:
@@ -88,7 +93,7 @@ try:
 
                         actual_data = ' '.join([actual_data[i:i+2] for i in range(0, len(actual_data), 2)])
                         print('\n')
-                        print(actual_data)
+                        print(f"actual_data: {actual_data}")
                         logging.debug(f'Recived the following (raw) data: {actual_data}')
 
                         ## Get indiviadual bit data
